@@ -10,6 +10,5 @@ abstract class AbstractLowEmissionCar(val regNumber: Option[String],
                                       val isNew: Option[Boolean],
                                       val price: Option[Int],
                                       val emissions: Option[Int],
-                                      val dateOfPurchase: Option[LocalDate]) {
-
-}
+                                      val dateOfPurchase: Option[LocalDate]
+                                     )
