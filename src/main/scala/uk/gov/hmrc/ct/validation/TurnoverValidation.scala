@@ -76,7 +76,7 @@ trait TurnoverValidation extends Validators {
     validateTurnoverRangeWithMinAndMaxMessages(this, s"error.${this.id}.coho.turnover", -maximumTurnoverInYear, maximumTurnoverInYear, 0)
   }
 
-  protected def validateTurnoverRangeWithMinAndMaxMessages(box: OptionalIntIdBox, message: String, min: Int, max: Int, secondaryIncome: Int)(): Set[CtValidation] = {
+   def validateTurnoverRangeWithMinAndMaxMessages(box: OptionalIntIdBox, message: String, min: Int, max: Int, secondaryIncome: Int)(): Set[CtValidation] = {
     box.value match {
       case Some(x) => {
         collectErrors(
