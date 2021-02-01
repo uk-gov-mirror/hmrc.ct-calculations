@@ -6,7 +6,7 @@
 package uk.gov.hmrc.ct.accounts.frs105.boxes
 
 import uk.gov.hmrc.ct.accounts.{AC3, AC4}
-import uk.gov.hmrc.ct.accounts.frs102.retriever.Frs102AccountsBoxRetriever
+import uk.gov.hmrc.ct.accounts.frs102.retriever.{AbridgedAccountsBoxRetriever, Frs102AccountsBoxRetriever}
 import uk.gov.hmrc.ct.accounts.retriever.AccountsBoxRetriever
 import uk.gov.hmrc.ct.box.retriever.FilingAttributesBoxValueRetriever
 import uk.gov.hmrc.ct.box.{CtBoxIdentifier, CtOptionalInteger, CtValidation, Input, ValidatableBox}
@@ -15,7 +15,7 @@ import uk.gov.hmrc.ct.validation.TurnoverValidation
 case class AC24(value: Option[Int]) extends CtBoxIdentifier(name = "Income from covid-19 business support grants")
   with CtOptionalInteger
   with Input
-  with ValidatableBox[AccountsBoxRetriever with Frs102AccountsBoxRetriever with FilingAttributesBoxValueRetriever]
+  with ValidatableBox[AccountsBoxRetriever with AbridgedAccountsBoxRetriever with FilingAttributesBoxValueRetriever]
   with TurnoverValidation {
 
   val accountsStart: AccountsBoxRetriever => AC3 = {
@@ -28,20 +28,25 @@ case class AC24(value: Option[Int]) extends CtBoxIdentifier(name = "Income from 
       boxRetriever.ac4()
   }
 
-  override def validate(boxRetriever: AccountsBoxRetriever with Frs102AccountsBoxRetriever with FilingAttributesBoxValueRetriever): Set[CtValidation] = {
+  override def validate(boxRetriever: AccountsBoxRetriever with AbridgedAccountsBoxRetriever with FilingAttributesBoxValueRetriever): Set[CtValidation] = {
     val incomeFromCovidGrants: Int = value.getOrElse(0)
     val ac12 = boxRetriever.ac12()
       val ac16 = boxRetriever.ac16()
 
-    val doCorrectValidation: Set[CtValidation] =
-      (ac12.value, ac16.value) match {
-      case (Some(_), None) => {
-        validateHmrcTurnover(boxRetriever, accountsStart, accountEnd, errorSuffix = ".hmrc.turnover.AC12", secondaryIncome = ac12.orZero)
+    val doCorrectValidation: Set[CtValidation] = {
+      if (value.getOrElse(0) == 0) {
+        validationSuccess
+      } else {
+        (ac12.value, ac16.value) match {
+          case (Some(_), None) => {
+            validateHmrcTurnover(boxRetriever, accountsStart, accountEnd, errorSuffix = ".hmrc.turnover.AC12", secondaryIncome = ac12.orZero)
+          }
+          case (None, Some(_)) => {
+            validateHmrcTurnover(boxRetriever, accountsStart, accountEnd, errorSuffix = ".hmrc.turnover.AC16", secondaryIncome = ac16.orZero)
+          }
+          case _ => validationSuccess
+        }
       }
-      case (None, Some(_)) => {
-        validateHmrcTurnover(boxRetriever, accountsStart, accountEnd, errorSuffix = ".hmrc.turnover.AC16", secondaryIncome = ac16.orZero)
-      }
-      case _ => validationSuccess
     }
 
 
