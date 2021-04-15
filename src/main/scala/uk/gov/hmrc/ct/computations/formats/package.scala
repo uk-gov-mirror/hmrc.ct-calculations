@@ -21,7 +21,7 @@ import uk.gov.hmrc.ct._
 import uk.gov.hmrc.ct.box.formats._
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
-import uk.gov.hmrc.ct.computations.covidSupport.{CP121, CP122, CP123, CP124, CP125b, CP125a}
+import uk.gov.hmrc.ct.computations.covidSupport.{CP121, CP122, CP123, CP124, CP125a, CP125b, CP131}
 import uk.gov.hmrc.ct.computations.lowEmissionCars.{Car, LEC01}
 import uk.gov.hmrc.ct.computations.machineryAndPlant.{CP105, CP109, CP110, CP94, CP97}
 
@@ -230,6 +230,8 @@ package object formats {
   implicit val CP125aFormat: Format[CP125a] = new OptionalIntegerFormat[CP125a](CP125a.apply)
 
   implicit val CP127Format: Format[CP127] = new OptionalIntegerFormat[CP127](CP127.apply)
+
+  implicit val CP131Format: Format[CP131] = new OptionalIntegerFormat[CP131](CP131.apply)
 
   implicit val cp128Format: Format[CP128] = new OptionalBooleanFormat[CP128](CP128.apply)
 

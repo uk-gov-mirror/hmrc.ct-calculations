@@ -20,7 +20,7 @@ import uk.gov.hmrc.ct.accounts._
 import uk.gov.hmrc.ct.accounts.frs10x.boxes.ACQ8999
 import uk.gov.hmrc.ct.box.retriever.BoxRetriever
 import uk.gov.hmrc.ct.computations._
-import uk.gov.hmrc.ct.computations.covidSupport.{CP121, CP122, CP123, CP124, CP125a, CP125b, CP126}
+import uk.gov.hmrc.ct.computations.covidSupport.{CP121, CP122, CP123, CP124, CP125a, CP125b, CP126, CP131}
 import uk.gov.hmrc.ct.computations.lowEmissionCars._
 import uk.gov.hmrc.ct.computations.machineryAndPlant._
 import uk.gov.hmrc.ct.{CATO01, CATO02, CATO03, CATO13, CATO14, CATO15, CATO16, CATO20, CATO21, CATO22, CATO23, CATO24}
@@ -288,6 +288,8 @@ trait ComputationsBoxRetriever extends BoxRetriever {
   def cp129(): CP129
 
   def cp130(): CP130 = CP130.calculate(this)
+
+  def cp131(): CP131
 
   def cp186(): CP186 = CP186.calculate(this)
 
